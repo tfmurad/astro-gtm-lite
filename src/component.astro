@@ -1,0 +1,71 @@
+---
+// Manual fallback component if you prefer component-based injection
+// over the integration hook.
+export interface Props {
+  id: string;
+  enable?: boolean;
+  dataLayerName?: string;
+  domain?: string;
+}
+
+const {
+  id,
+  enable = true,
+  dataLayerName = "dataLayer",
+  domain = "https://www.googletagmanager.com",
+} = Astro.props;
+
+function validateGtmId(id: string): void {
+  if (!id || !/^GTM-[A-Z0-9]+$/i.test(id)) {
+    throw new Error(
+      `[astro-gtm-lite] Invalid GTM ID: "${id}". It must match "GTM-XXXXXX" (e.g. GTM-ABC123).`
+    );
+  }
+}
+
+function validateDomain(domain: string): void {
+  try {
+    const url = new URL(domain);
+    if (url.protocol !== "http:" && url.protocol !== "https:") {
+      throw new Error();
+    }
+  } catch {
+    throw new Error(
+      `[astro-gtm-lite] Invalid domain: "${domain}". It must be a valid HTTP/HTTPS URL.`
+    );
+  }
+}
+
+if (enable) {
+  validateGtmId(id);
+  validateDomain(domain);
+}
+---
+
+{enable && (
+  <>
+    {/* GTM loader — injected inline in <head> */}
+    <script is:inline define:vars={{ id, dataLayerName, domain }}>
+      (function(w,d,s,l,i){
+        w[l]=w[l]||[];
+        w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});
+        var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),
+            dl=l!='dataLayer'?'&l='+l:'';
+        j.async=true;
+        j.src=domain+'/gtm.js?id='+i+dl;
+        f.parentNode.insertBefore(j,f);
+      })(window,document,'script',dataLayerName,id);
+    </script>
+
+    {/* No-script fallback for JS-disabled browsers */}
+    <noscript>
+      <iframe
+        src={`${domain}/ns.html?id=${id}`}
+        height="0"
+        width="0"
+        style="display:none;visibility:hidden"
+      ></iframe>
+    </noscript>
+  </>
+)}

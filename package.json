@@ -1,0 +1,50 @@
+{
+  "name": "astro-gtm-lite",
+  "version": "1.0.0",
+  "description": "Astro v6 compatible. A lightweight Astro integration for Google Tag Manager. Zero components, zero fuss.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Al Murad Uzzaman <almuraduz@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tfmurad/astro-gtm-lite.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tfmurad/astro-gtm-lite/issues"
+  },
+  "keywords": [
+    "astro-component",
+    "astro-integration",
+    "withastro",
+    "google-tag-manager",
+    "gtm",
+    "analytics",
+    "tracking"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./component": {
+      "types": "./dist/component.d.ts",
+      "default": "./dist/component.astro"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "astro": "^6.0.0",
+    "typescript": "^5.0.0"
+  },
+  "peerDependencies": {
+    "astro": "^4.0.0 || ^5.0.0 || ^6.0.0"
+  }
+}
