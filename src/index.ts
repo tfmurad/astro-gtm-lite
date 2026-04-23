@@ -49,6 +49,7 @@ function buildGtmScript(opts: Required<GtmOptions>): string {
   const safeId = escapeJsString(id);
 
   return `
+    window['${safeDataLayerName}'] = window['${safeDataLayerName}'] || [];
     (function(w,d,s,l,i){
       w[l]=w[l]||[];
       w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});
@@ -59,6 +60,23 @@ function buildGtmScript(opts: Required<GtmOptions>): string {
       j.src='${safeDomain}/gtm.js?id='+i+dl;
       f.parentNode.insertBefore(j,f);
     })(window,document,'script','${safeDataLayerName}','${safeId}');
+  `;
+}
+
+function buildViewTransitionScript(dataLayerName: string): string {
+  const safeDataLayerName = escapeJsString(dataLayerName);
+  return `
+    document.addEventListener('astro:after-swap', function() {
+      try {
+        window['${safeDataLayerName}'].push({
+          event: 'virtualPageview',
+          virtualPagePath: window.location.pathname,
+          virtualPageTitle: document.title
+        });
+      } catch (error) {
+        console.error('[astro-gtm-lite] Error handling View Transition:', error);
+      }
+    });
   `;
 }
 
@@ -87,7 +105,10 @@ export default function gtmLite(options: GtmOptions): AstroIntegration {
       "astro:config:setup": ({ injectScript, command }) => {
         if (command === "dev" && !opts.devMode) return;
 
-        injectScript("head-inline", buildGtmScript(opts));
+        injectScript(
+          "head-inline",
+          buildGtmScript(opts) + buildViewTransitionScript(opts.dataLayerName),
+        );
       },
     },
   };

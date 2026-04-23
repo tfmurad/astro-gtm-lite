@@ -2,7 +2,7 @@
 
 > A zero-component Astro integration for **Google Tag Manager (GTM)**.
 
-Easily inject Google Tag Manager snippets into your Astro site. Supports Astro v4, v5, and **v6**.
+Easily inject Google Tag Manager snippets into your Astro site. Supports Astro v4, v5, and **v6**. Works seamlessly with **View Transitions (clientRouter)**.
 
 Instead of manually adding GTM `<script>` and `<noscript>` tags to every page, `astro-gtm-lite` hooks into Astro's build pipeline and injects the official Google Tag Manager snippets automatically — no layout edits required.
 
@@ -34,6 +34,14 @@ export default defineConfig({
 The script is injected automatically into every page — no layout edits required.
 
 > **Note:** GTM is **disabled during `astro dev`** by default. Set `devMode: true` if you want to test GTM in development.
+
+### Astro View Transitions
+
+`astro-gtm-lite` works seamlessly with and without [Astro View Transitions](https://docs.astro.build/en/guides/view-transitions/).
+
+On each client-side navigation, a `virtualPageview` event is pushed to `dataLayer` with the updated page path and title. The `astro:after-swap` event is used, which fires immediately after the DOM is swapped — perfect for analytics tracking.
+
+To track these virtual page views in GTM, create a **Custom Event** trigger with event name `virtualPageview`, and use **Data Layer Variables** for `virtualPagePath` and `virtualPageTitle` to populate your GA4 / Universal Analytics tags.
 
 ### Options
 

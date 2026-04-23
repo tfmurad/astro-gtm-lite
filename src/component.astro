@@ -46,6 +46,7 @@ if (enable) {
   <>
     {/* GTM loader — injected inline in <head> */}
     <script is:inline define:vars={{ id, dataLayerName, domain }}>
+      window[dataLayerName] = window[dataLayerName] || [];
       (function(w,d,s,l,i){
         w[l]=w[l]||[];
         w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});
@@ -56,6 +57,19 @@ if (enable) {
         j.src=domain+'/gtm.js?id='+i+dl;
         f.parentNode.insertBefore(j,f);
       })(window,document,'script',dataLayerName,id);
+
+      // View Transitions support — pushes virtual pageview on each navigation
+      document.addEventListener('astro:after-swap', function() {
+        try {
+          window[dataLayerName].push({
+            event: 'virtualPageview',
+            virtualPagePath: window.location.pathname,
+            virtualPageTitle: document.title
+          });
+        } catch (error) {
+          console.error('[astro-gtm-lite] Error handling View Transition:', error);
+        }
+      });
     </script>
 
     {/* No-script fallback for JS-disabled browsers */}
