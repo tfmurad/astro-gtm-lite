@@ -1,8 +1,11 @@
 # astro-gtm-lite
 
+[![npm version](https://img.shields.io/npm/v/astro-gtm-lite.svg)](https://www.npmjs.com/package/astro-gtm-lite)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 > A zero-component Astro integration for **Google Tag Manager (GTM)**.
 
-Easily inject Google Tag Manager snippets into your Astro site. Supports Astro v4, v5, and **v6**. Works seamlessly with **View Transitions (clientRouter)**.
+Easily inject Google Tag Manager snippets into your Astro site. Supports Astro v5,v6 and v7. Works seamlessly with **View Transitions (clientRouter)**.
 
 Instead of manually adding GTM `<script>` and `<noscript>` tags to every page, `astro-gtm-lite` hooks into Astro's build pipeline and injects the official Google Tag Manager snippets automatically — no layout edits required.
 
